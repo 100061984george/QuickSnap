@@ -82,24 +82,6 @@ namespace CardGames.GameLogic
 			get { return _started; }
 		}
 
-		public void Shuffle()
-		{
-			for(int i = 0; i < 52; i++)
-			{
-				if(_cards[i].FaceUp) _cards[i].TurnOver();
-			}
-			Random rnd = new Random();
-			// for each card (no need to shuffle last card)
-			for(int i = 0; i < 52 - 1; i++)
-			{
-				// pick a random index
-				int rndIdx = rnd.Next(52 - i);
-				Card temp = _cards[i];
-				_cards[i] = _cards[i + rndIdx];
-				_cards[i + rndIdx] = temp;
-			}
-			_topCard = 0;
-		}
 		/// <summary>
 		/// Start the Snap game playing!
 		/// </summary>
@@ -110,7 +92,7 @@ namespace CardGames.GameLogic
 				_started = true;
 				_deck.Shuffle ();		// Return the cards and shuffle
 
-				FlipNextCard ();		// Flip the first card...
+				FlipNextCard ();	// Flip the first card...
 				_gameTimer.Start();
 			}
 		}
@@ -135,7 +117,7 @@ namespace CardGames.GameLogic
 			{
 				_gameTimer.Reset ();
 				FlipNextCard ();
-			}		
+			}
 		}
 
 		/// <summary>
@@ -157,23 +139,18 @@ namespace CardGames.GameLogic
 		public void PlayerHit (int player)
 		{
 			//TODO: consider deducting score for miss hits???
-			if ( player >= 0 && player < _score.Length &&  	// its a valid player
-				 IsStarted && 								// and the game is started
-				 _topCards [0] != null && _topCards [0].Rank == _topCards [1].Rank) // and its a match
+			if ( player >= 0 && player < _score.Length && IsStarted && _topCards[0] != null && _topCards[0].Rank == _topCards [1].Rank) 
 			{
 				_score[player]++;
-				//TODO: consider playing a sound here...
 			}
 			else if ( player >= 0 && player < _score.Length)
 			{
 				_score[player]--;
 			}
-
 			// stop the game...
 			_started = false;
 			_gameTimer.Stop ();
 		}
-	
 		#region Snap Game Unit Tests
 		#if DEBUG
 
